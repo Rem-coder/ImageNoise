@@ -17,7 +17,7 @@ namespace ImageNoise
         private MenuStrip menuStrip = new MenuStrip();
         private ToolStripMenuItem openImgButt = new ToolStripMenuItem("Открыть");
         private OpenFileDialog openFile = new OpenFileDialog();
-        private PictureBox img = new PictureBox();
+        private PictureBox imgBox = new PictureBox();
 
 
         public Form1()
@@ -45,11 +45,13 @@ namespace ImageNoise
 
             openImgButt.BackColor = Color.FromArgb(217, 211, 211);
 
-            openFile.Filter = "Images (*.jpg)|*.jpg|Images(*.png)|*.png|Images(*.bmp)|*.bmp";
+            openFile.Filter = "Images (*.jpg)|*.jpg|Images(*.png)|*.png|Images(*.bmp)|*.bmp|Images(*.jpeg)|*.jpeg";
 
-            img.Location = new Point(0, menuStrip.Bottom);
-            
-            split.Panel1.Controls.Add(img);
+            imgBox.Location = new Point(0, menuStrip.Bottom);
+            imgBox.SizeMode = PictureBoxSizeMode.Zoom;
+
+
+            split.Panel1.Controls.Add(imgBox);
             menuStrip.Items.Add(openImgButt);
             split.Panel1.Controls.Add(menuStrip);           
             split.Panel2.Controls.Add(trackBarIm);
@@ -63,7 +65,7 @@ namespace ImageNoise
                 split.Size = new Size(ClientSize.Width, ClientSize.Height);
                 split.SplitterDistance = ClientSize.Width - 40;
 
-                img.Size = new Size(split.Panel1.Width, split.Panel1.Height - menuStrip.Height);
+                imgBox.Size = new Size(split.Panel1.Width, split.Panel1.Height - menuStrip.Height);
 
                 trackBarIm.Size = new Size(split.Width, split.Height);
             };
@@ -78,7 +80,7 @@ namespace ImageNoise
         {
             if(openFile.ShowDialog() == DialogResult.OK)
             {
-
+                imgBox.Image = new Bitmap(openFile.FileName);
             }
         }
     }
