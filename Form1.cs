@@ -14,15 +14,27 @@ namespace ImageNoise
     {
         private SplitContainer split = new SplitContainer();
         private TrackBar trackBarIm = new TrackBar();
+        private MenuStrip menuStrip = new MenuStrip();
+        private ToolStripMenuItem openImgButt = new ToolStripMenuItem("Открыть");
+        private OpenFileDialog openFile = new OpenFileDialog();
+        private PictureBox img = new PictureBox();
+
 
         public Form1()
         {
             MyInitializeComponent();
+            Load += (sender, args) => OnSizeChanged(EventArgs.Empty);
+            openImgButt.Click += (sender, args) => ClickOnOpenImg(); 
+
+            ChageSize();
+            CheckTrackBarImValue();
         }
 
         private void MyInitializeComponent()
         {
             this.Text = "0%";
+            this.MinimumSize = new Size(300, 300);
+
             split.BorderStyle = BorderStyle.Fixed3D;
             split.IsSplitterFixed = true;
 
@@ -31,22 +43,27 @@ namespace ImageNoise
             trackBarIm.Minimum = 0;
             trackBarIm.TickStyle = TickStyle.TopLeft;
 
+            openImgButt.BackColor = Color.FromArgb(217, 211, 211);
+
+            openFile.Filter = "Images (*.jpg)|*.jpg|Images(*.png)|*.png|Images(*.bmp)|*.bmp";
+
+            img.Location = new Point(0, menuStrip.Bottom);
+            
+            split.Panel1.Controls.Add(img);
+            menuStrip.Items.Add(openImgButt);
+            split.Panel1.Controls.Add(menuStrip);           
             split.Panel2.Controls.Add(trackBarIm);
             Controls.Add(split);
-
-            Load += (sender, args) => OnSizeChanged(EventArgs.Empty);
-                
-            ChageSize();
-            CheckTrackBarImValue();
         }
 
         private void ChageSize()
         {
-
             SizeChanged += (sender, args) =>
             {
                 split.Size = new Size(ClientSize.Width, ClientSize.Height);
                 split.SplitterDistance = ClientSize.Width - 40;
+
+                img.Size = new Size(split.Panel1.Width, split.Panel1.Height - menuStrip.Height);
 
                 trackBarIm.Size = new Size(split.Width, split.Height);
             };
@@ -55,6 +72,14 @@ namespace ImageNoise
         private void CheckTrackBarImValue()
         {
             trackBarIm.ValueChanged += (sender, args) => this.Text = trackBarIm.Value.ToString() + '%';
+        }
+
+        private void ClickOnOpenImg()
+        {
+            if(openFile.ShowDialog() == DialogResult.OK)
+            {
+
+            }
         }
     }
 }
