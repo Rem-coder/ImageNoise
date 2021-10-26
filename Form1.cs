@@ -14,6 +14,7 @@ namespace ImageNoise
     {
         public Form1()
         {
+            var a = 1;
             InitializeComponent();
         }
     }
