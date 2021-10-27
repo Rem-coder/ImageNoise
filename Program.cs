@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ImageNoise
 {
-    static class Program
+    class Program : IAlgoritm
     {
         /// <summary>
         /// Главная точка входа для приложения.

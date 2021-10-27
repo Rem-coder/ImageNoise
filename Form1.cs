@@ -12,16 +12,23 @@ namespace ImageNoise
 {
     public partial class Form1 : Form
     {
-        private readonly SplitContainer split = new SplitContainer();
-        private readonly TrackBar trackBarIm = new TrackBar();
-        private readonly MenuStrip menuStrip = new MenuStrip();
-        private readonly ToolStripMenuItem openImgButt = new ToolStripMenuItem("Открыть");
-        private readonly OpenFileDialog openFile = new OpenFileDialog();
-        private readonly PictureBox imgBox = new PictureBox();
+        private readonly SplitContainer split;
+        private readonly TrackBar trackBarIm;
+        private readonly MenuStrip menuStrip;
+        private readonly ToolStripMenuItem openImgButt;
+        private readonly OpenFileDialog openFile;
+        private readonly PictureBox imgBox;
 
 
         public Form1()
         {
+            split = new SplitContainer();
+            trackBarIm = new TrackBar();
+            menuStrip = new MenuStrip();
+            openImgButt = new ToolStripMenuItem("Открыть");
+            openFile = new OpenFileDialog();
+            imgBox = new PictureBox();
+
             MyInitializeComponent();
             ChageSize();
             CheckEvents();
@@ -83,7 +90,9 @@ namespace ImageNoise
         {
             if (openFile.ShowDialog() == DialogResult.OK)
             {
-                imgBox.Image = new Bitmap(openFile.FileName);
+                var img = new Bitmap(openFile.FileName);
+                imgBox.Image = img;
+                var a = new ImgNoiseAlg(img);
             }
         }
     }
