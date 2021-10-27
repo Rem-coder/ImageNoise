@@ -12,22 +12,19 @@ namespace ImageNoise
 {
     public partial class Form1 : Form
     {
-        private SplitContainer split = new SplitContainer();
-        private TrackBar trackBarIm = new TrackBar();
-        private MenuStrip menuStrip = new MenuStrip();
-        private ToolStripMenuItem openImgButt = new ToolStripMenuItem("Открыть");
-        private OpenFileDialog openFile = new OpenFileDialog();
-        private PictureBox imgBox = new PictureBox();
+        private readonly SplitContainer split = new SplitContainer();
+        private readonly TrackBar trackBarIm = new TrackBar();
+        private readonly MenuStrip menuStrip = new MenuStrip();
+        private readonly ToolStripMenuItem openImgButt = new ToolStripMenuItem("Открыть");
+        private readonly OpenFileDialog openFile = new OpenFileDialog();
+        private readonly PictureBox imgBox = new PictureBox();
 
 
         public Form1()
         {
             MyInitializeComponent();
-            Load += (sender, args) => OnSizeChanged(EventArgs.Empty);
-            openImgButt.Click += (sender, args) => ClickOnOpenImg(); 
-
             ChageSize();
-            CheckTrackBarImValue();
+            CheckEvents();
         }
 
         private void MyInitializeComponent()
@@ -50,10 +47,14 @@ namespace ImageNoise
             imgBox.Location = new Point(0, menuStrip.Bottom);
             imgBox.SizeMode = PictureBoxSizeMode.Zoom;
 
+            AddControls();
+        }
 
+        private void AddControls()
+        {
             split.Panel1.Controls.Add(imgBox);
             menuStrip.Items.Add(openImgButt);
-            split.Panel1.Controls.Add(menuStrip);           
+            split.Panel1.Controls.Add(menuStrip);
             split.Panel2.Controls.Add(trackBarIm);
             Controls.Add(split);
         }
@@ -71,14 +72,16 @@ namespace ImageNoise
             };
         }
 
-        private void CheckTrackBarImValue()
+        private void CheckEvents()
         {
+            Load += (sender, args) => OnSizeChanged(EventArgs.Empty);
+            openImgButt.Click += (sender, args) => ClickOnOpenImg();
             trackBarIm.ValueChanged += (sender, args) => this.Text = trackBarIm.Value.ToString() + '%';
         }
 
         private void ClickOnOpenImg()
         {
-            if(openFile.ShowDialog() == DialogResult.OK)
+            if (openFile.ShowDialog() == DialogResult.OK)
             {
                 imgBox.Image = new Bitmap(openFile.FileName);
             }
