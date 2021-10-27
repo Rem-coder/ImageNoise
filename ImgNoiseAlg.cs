@@ -9,25 +9,36 @@ namespace ImageNoise
 {
     class ImgNoiseAlg
     {
-        private List<Bitmap> resultNoiseImgs { get; set; }
-        private List<Pixel> pixelsStartAmg { get; set; }
+        public List<Bitmap> ResultNoiseImgs { get; set; }
+        public List<Pixel> PixelsStartAmg { get; set; }
 
         public ImgNoiseAlg(Bitmap startImg)
         {
-            resultNoiseImgs = GetNoiseImgs(startImg);
-            pixelsStartAmg = GetListPixelsStartImg(startImg);
+            ResultNoiseImgs = GetNoiseImgs(startImg);
+            PixelsStartAmg = GetListPixelsStartImg(startImg);
         }
 
         protected static List<Bitmap> GetNoiseImgs(Bitmap startImg)
         {
-            var noisePercent = 1;
+            var pixelsStartImg = GetListPixelsStartImg(startImg);
+            var pixelResImg = new List<Pixel>(pixelsStartImg.Count);
+            var rng = new Random();
             var resultImgs = new List<Bitmap>(100);
-            resultImgs.Add(startImg);
-
-            for(; noisePercent < 100; noisePercent++)
-                resultImgs.Add(GetImgNoisePercent(startImg, noisePercent));
-
             resultImgs.Add(new Bitmap(startImg.Width, startImg.Height));
+            for(var i = 1; i < 100; i++)
+            {
+                for (var j = 0; j < pixelsStartImg.Count / 100; j++)
+                {
+                    var rngNum = rng.Next(pixelsStartImg.Count);
+                    pixelResImg.Add(pixelsStartImg[rngNum]);
+                    pixelsStartImg.RemoveAt(rngNum);
+                }
+                var currentBitmap = new Bitmap(startImg.Width, startImg.Height);
+                foreach (var pixel in pixelResImg)
+                    currentBitmap.SetPixel(pixel.Location.X, pixel.Location.Y, pixel.Color);
+                resultImgs.Add(currentBitmap);
+            }
+            resultImgs.Add(startImg);
             return resultImgs;
         }
 
@@ -40,25 +51,7 @@ namespace ImageNoise
             return pixelsStartAmg;
         }
 
-        protected static Bitmap GetImgNoisePercent(Bitmap startImg, int noisePercent)
-        {
-            var pixelsStartAmg = GetListPixelsStartImg(startImg);
-            var newCountPixelsInImg = Convert.ToInt32(pixelsStartAmg.Count * (noisePercent * 0.01));
-            var resPixelsInImg = new List<Pixel>(newCountPixelsInImg);
-            var resBitmapPercent = new Bitmap(startImg.Width, startImg.Height);
-            var rng = new Random();
-            for (var i = 0; i < newCountPixelsInImg; i++)
-            {
-                var rngIndex = rng.Next(pixelsStartAmg.Count);
-                resPixelsInImg.Add(pixelsStartAmg[rngIndex]);
-                pixelsStartAmg.RemoveAt(rngIndex);
-            }
-            foreach (var pixel in resPixelsInImg)
-                resBitmapPercent.SetPixel(pixel.Location.X, pixel.Location.Y, pixel.Color);
-            return resBitmapPercent;
-        }
-
-        public List<Pixel> GetPixelsImg() => pixelsStartAmg;
-        public List<Bitmap> GetNoiseImgs() => resultNoiseImgs;
+        public List<Pixel> GetPixelsImg() => PixelsStartAmg;
+        public List<Bitmap> GetNoiseImgs() => ResultNoiseImgs;
     }
 }

@@ -18,6 +18,7 @@ namespace ImageNoise
         private readonly ToolStripMenuItem openImgButt;
         private readonly OpenFileDialog openFile;
         private readonly PictureBox imgBox;
+        private List<Bitmap> images;
 
 
         public Form1()
@@ -83,7 +84,12 @@ namespace ImageNoise
         {
             Load += (sender, args) => OnSizeChanged(EventArgs.Empty);
             openImgButt.Click += (sender, args) => ClickOnOpenImg();
-            trackBarIm.ValueChanged += (sender, args) => this.Text = trackBarIm.Value.ToString() + '%';
+            trackBarIm.ValueChanged += (sender, args) =>
+            {
+                this.Text = trackBarIm.Value.ToString() + '%';
+                if (images != null)
+                    imgBox.Image = images[trackBarIm.Value];
+            };
         }
 
         private void ClickOnOpenImg()
@@ -92,7 +98,8 @@ namespace ImageNoise
             {
                 var img = new Bitmap(openFile.FileName);
                 imgBox.Image = img;
-                var a = new ImgNoiseAlg(img);
+                var imgs = new ImgNoiseAlg(img);
+                images = imgs.ResultNoiseImgs;
             }
         }
     }
